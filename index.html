@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="az">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Baku Marriott Hotel Boulevard · Otaqlar və rezervasiya</title>
+<meta name="description" content="Bakı Ağ Şəhərdə, Xəzər sahilində 5 ulduzlu otel. Dəhlizlə gəzin, otaqlara 3D baxın və birbaşa rezerv edin.">
+<meta name="theme-color" content="#14110e">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Oswald:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/site.css?v=1">
+</head>
+<body>
+<a class="skip" href="#roomListBtn">Otaq siyahısına keç</a>
+
+<!-- ===== 3D corridor ===== -->
+<div class="stage" id="stage" aria-hidden="true">
+  <div class="world" id="world">
+    <div class="plane hero-sign sign" data-z="460" data-x="0" data-y="-30">
+      <span class="tag">7-ci mərtəbə · Otaqlar və Suite-lər</span>
+      <h1>Xoş gəlmisiniz</h1>
+      <p>Dəhliz boyunca irəliləyin və istənilən qapıya toxunun — otağın içinə 3D baxın. <b class="t-free">Yaşıl</b> işıq boş, <b class="t-booked">qırmızı</b> dolu otaq deməkdir.</p>
+    </div>
+    <section class="plane sign" data-z="2550" data-x="-120" data-y="10">
+      <span class="tag">Restoran · Lobbi</span>
+      <h2 lang="en">White City Restaurant &amp; Bar</h2>
+      <p>Beynəlxalq mətbəx, iş naharları və rahat axşamlar üçün müasir məkan.</p>
+      <small>Hər gün 10:30 – 02:00</small>
+    </section>
+    <section class="plane sign" data-z="3720" data-x="120" data-y="10">
+      <span class="tag">Səhər yeməyi · Kofe</span>
+      <h2 lang="en">Green House &amp; The Market</h2>
+      <p>Təzə kruasanlar, omletlər və lobbidə qəhvə, desert, sendviçlər.</p>
+      <small>The Market: hər gün 08:00 – 23:00</small>
+    </section>
+    <section class="plane sign" data-z="4890" data-x="-120" data-y="10">
+      <span class="tag">Wellness</span>
+      <h2>Hovuz · Spa · Fitnes</h2>
+      <p>Qapalı hovuz, fərdi spa prosedurları və gecə-gündüz açıq idman zalı.</p>
+      <small>Fitnes: 24/7</small>
+    </section>
+    <section class="plane sign" data-z="6060" data-x="120" data-y="10">
+      <span class="tag">4-cü mərtəbə</span>
+      <h2 lang="en">M Club Lounge</h2>
+      <p>Executive otaq və suite qonaqları üçün səhər yeməyi, qəlyanaltılar və sakit iş guşəsi.</p>
+      <small>Executive və Suite qonaqları üçün</small>
+    </section>
+  </div>
+</div>
+<div class="vig" aria-hidden="true"></div>
+
+<!-- ===== Header ===== -->
+<header class="hdr">
+  <a class="logo" lang="en" href="./" aria-label="Baku Marriott Hotel Boulevard — əsas səhifə">
+    <span class="logo-top">Baku Marriott</span>
+    <span class="logo-sub">Hotel Boulevard</span>
+  </a>
+  <nav class="nav" aria-label="Əsas naviqasiya">
+    <button type="button" data-go="rooms">Otaqlar</button>
+    <button type="button" data-go="2550">Restoranlar</button>
+    <button type="button" data-go="4890">Spa &amp; Fitnes</button>
+    <button type="button" data-go="reception">Resepsiyon</button>
+  </nav>
+  <div class="hdr-actions">
+    <button type="button" class="btn btn-line" id="statusBtn">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 11l3 3 8-8"/><path d="M20 12v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h9"/></svg>
+      <span>Rezervasiyam</span>
+    </button>
+    <button type="button" class="btn btn-light" data-go="reception">Rezerv et</button>
+  </div>
+</header>
+
+<!-- ===== Booking bar (Marriott style) ===== -->
+<form class="bbar" id="bbar" autocomplete="off">
+  <button type="button" class="bbar-chip" id="bbarChip" aria-expanded="false" aria-controls="bbarFields">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
+    <span id="chipText">Tarix seçin</span>
+  </button>
+  <div class="bbar-fields" id="bbarFields">
+    <label class="bf">
+      <span>Giriş</span>
+      <input type="date" id="bIn" required>
+    </label>
+    <label class="bf">
+      <span>Çıxış</span>
+      <input type="date" id="bOut" required>
+    </label>
+    <label class="bf bf-sm">
+      <span>Böyük</span>
+      <select id="bAdults"><option>1</option><option selected>2</option><option>3</option><option>4</option></select>
+    </label>
+    <label class="bf bf-sm">
+      <span>Uşaq</span>
+      <select id="bKids"><option selected>0</option><option>1</option><option>2</option><option>3</option></select>
+    </label>
+    <button class="btn btn-dark bbar-go" type="submit">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      Boş otaqları göstər
+    </button>
+  </div>
+</form>
+
+<!-- ===== HUD ===== -->
+<div class="hud">
+  <div class="hud-l">
+    <span id="hint">Aşağı sürüşdürün — dəhlizlə irəliləyin</span>
+    <span class="legend" aria-label="İşarələr"><i class="led free"></i>Boş <i class="led pending"></i>Gözləmədə <i class="led booked"></i>Dolu</span>
+  </div>
+  <div class="hud-r">
+    <b id="meter">0 m</b>
+    <button type="button" class="btn btn-glass" id="roomListBtn">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h10"/></svg>
+      Otaq siyahısı <span class="count" id="freeCount"></span>
+    </button>
+  </div>
+</div>
+<div class="tip" id="doorTip" role="tooltip" hidden></div>
+<div class="progress" aria-hidden="true"><i id="prog"></i></div>
+
+<!-- ===== Room viewer ===== -->
+<div class="modal" id="roomModal" role="dialog" aria-modal="true" aria-labelledby="rmTitle" hidden>
+  <div class="modal-scrim" data-close></div>
+  <div class="rm">
+    <div class="rm-view" id="rmView">
+      <div class="r3-host" id="r3host"></div>
+      <div class="rm-leaf" id="rmLeaf" aria-hidden="true"><span class="leaf-no" id="leafNo"></span><i class="leaf-h"></i><i class="leaf-r"></i></div>
+      <div class="rm-ctrl">
+        <span class="drag-hint"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 12H3m0 0 3-3m-3 3 3 3M16 12h5m0 0-3-3m3 3-3 3"/></svg>Sürüşdürərək otağa baxın</span>
+        <div class="rm-btns">
+          <button type="button" class="round" data-look="-1" aria-label="Sola bax"><svg viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg></button>
+          <button type="button" class="round" data-look="0" aria-label="Mərkəzə qayıt"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/></svg></button>
+          <button type="button" class="round" data-look="1" aria-label="Sağa bax"><svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg></button>
+        </div>
+      </div>
+    </div>
+    <div class="rm-info">
+      <button type="button" class="x" data-close aria-label="Bağla"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+      <span class="eyebrow" id="rmEyebrow"></span>
+      <h2 id="rmTitle"></h2>
+      <span class="status" id="rmStatus"></span>
+      <p class="rm-sum" id="rmSummary"></p>
+      <dl class="facts" id="rmFacts"></dl>
+      <ul class="amen" id="rmAmen"></ul>
+      <div class="price">
+        <div><b id="rmPrice"></b><span>/ gecə</span></div>
+        <small id="rmTotal"></small>
+      </div>
+      <div class="rm-cta">
+        <button type="button" class="btn btn-dark btn-lg" id="rmBook">Bu otağı rezerv et</button>
+        <button type="button" class="btn btn-line-dark btn-lg" data-close>Dəhlizə qayıt</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== Reception (booking form) ===== -->
+<aside class="rcp" id="reception" aria-labelledby="rcpTitle" hidden>
+  <div class="rcp-head">
+    <div>
+      <span class="eyebrow">Resepsiyon</span>
+      <h2 id="rcpTitle">Rezervasiyanı tamamlayın</h2>
+    </div>
+    <button type="button" class="x" id="rcpClose" aria-label="Resepsiyonu bağla"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+  </div>
+
+  <form id="resForm" class="rcp-body" novalidate>
+    <div class="summary" id="summary" aria-live="polite"></div>
+
+    <fieldset>
+      <legend>Qalma məlumatı</legend>
+      <div class="f f-full">
+        <label for="fRoom">Otaq <i>*</i></label>
+        <select id="fRoom" name="room" required></select>
+        <em class="err" data-err="room"></em>
+      </div>
+      <div class="f">
+        <label for="fIn">Giriş <i>*</i></label>
+        <input type="date" id="fIn" name="in" required>
+        <em class="err" data-err="in"></em>
+      </div>
+      <div class="f">
+        <label for="fOut">Çıxış <i>*</i></label>
+        <input type="date" id="fOut" name="out" required>
+        <em class="err" data-err="out"></em>
+      </div>
+      <div class="f">
+        <label for="fAdults">Böyüklər</label>
+        <select id="fAdults" name="adults"><option>1</option><option selected>2</option><option>3</option><option>4</option></select>
+        <em class="err" data-err="adults"></em>
+      </div>
+      <div class="f">
+        <label for="fKids">Uşaqlar</label>
+        <select id="fKids" name="children"><option selected>0</option><option>1</option><option>2</option><option>3</option></select>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Qonaq məlumatı</legend>
+      <div class="f">
+        <label for="fFirst">Ad <i>*</i></label>
+        <input id="fFirst" name="first_name" autocomplete="given-name" required maxlength="60">
+        <em class="err" data-err="first_name"></em>
+      </div>
+      <div class="f">
+        <label for="fLast">Soyad <i>*</i></label>
+        <input id="fLast" name="last_name" autocomplete="family-name" required maxlength="60">
+        <em class="err" data-err="last_name"></em>
+      </div>
+      <div class="f f-full">
+        <label for="fEmail">E-poçt <i>*</i></label>
+        <input id="fEmail" name="email" type="email" autocomplete="email" inputmode="email" required maxlength="120">
+        <small class="help">Təsdiq məktubu bu ünvana göndəriləcək.</small>
+        <em class="err" data-err="email"></em>
+      </div>
+      <div class="f f-full">
+        <label for="fPhone">Telefon <i>*</i></label>
+        <input id="fPhone" name="phone" type="tel" autocomplete="tel" inputmode="tel" required placeholder="+994 50 123 45 67" maxlength="20">
+        <em class="err" data-err="phone"></em>
+      </div>
+      <div class="f f-full">
+        <label for="fNote">Xüsusi istək</label>
+        <textarea id="fNote" name="note" rows="3" maxlength="600" placeholder="Erkən giriş, uşaq çarpayısı, hava limanı transferi…"></textarea>
+        <em class="err" data-err="note"></em>
+      </div>
+      <div class="hp" aria-hidden="true"><label>Website <input name="website" tabindex="-1" autocomplete="off"></label></div>
+      <label class="check f-full">
+        <input type="checkbox" name="consent" id="fConsent" required>
+        <span>Məlumatlarımın rezervasiya məqsədilə emalına razıyam.</span>
+      </label>
+      <em class="err" data-err="consent"></em>
+    </fieldset>
+
+    <div class="form-err" id="formErr" role="alert" hidden></div>
+    <button class="btn btn-gold btn-lg btn-block" id="submitBtn" type="submit">Rezervasiya sorğusu göndər</button>
+    <p class="fine">Ödəniş otelə gəlişdə alınır. Sorğunuz resepsiyon tərəfindən təsdiqləndikdən sonra sizə e-poçt göndəriləcək.</p>
+  </form>
+
+  <div class="rcp-done" id="rcpDone" hidden>
+    <div class="done-ic"><svg viewBox="0 0 24 24"><path d="m5 12 5 5L20 7"/></svg></div>
+    <h3>Sorğunuz qəbul edildi</h3>
+    <p>Rezervasiya kodunuz:</p>
+    <div class="code" id="doneCode"></div>
+    <p id="doneText"></p>
+    <button type="button" class="btn btn-dark btn-lg btn-block" id="doneBack">Dəhlizə qayıt</button>
+    <button type="button" class="btn btn-line-dark btn-lg btn-block" id="doneStatus">Statusu yoxla</button>
+  </div>
+</aside>
+
+<!-- ===== Room list drawer ===== -->
+<div class="modal side" id="listModal" role="dialog" aria-modal="true" aria-labelledby="listTitle" hidden>
+  <div class="modal-scrim" data-close></div>
+  <div class="sheet">
+    <div class="sheet-head">
+      <div><span class="eyebrow" id="listDates"></span><h2 id="listTitle">Otaqlar</h2></div>
+      <button type="button" class="x" data-close aria-label="Bağla"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+    </div>
+    <div class="list-filter" role="group" aria-label="Filtr">
+      <button type="button" class="fchip on" data-f="all">Hamısı</button>
+      <button type="button" class="fchip" data-f="free">Yalnız boş</button>
+    </div>
+    <ul class="rlist" id="rlist"></ul>
+  </div>
+</div>
+
+<!-- ===== Status check ===== -->
+<div class="modal" id="statusModal" role="dialog" aria-modal="true" aria-labelledby="stTitle" hidden>
+  <div class="modal-scrim" data-close></div>
+  <div class="card">
+    <button type="button" class="x" data-close aria-label="Bağla"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+    <span class="eyebrow">Rezervasiyam</span>
+    <h2 id="stTitle">Statusu yoxlayın</h2>
+    <form id="stForm" novalidate>
+      <div class="f f-full"><label for="stCode">Rezervasiya kodu</label><input id="stCode" placeholder="MB-XXXXXX" required autocapitalize="characters"></div>
+      <div class="f f-full"><label for="stEmail">E-poçt</label><input id="stEmail" type="email" autocomplete="email" required></div>
+      <button class="btn btn-dark btn-lg btn-block" type="submit">Yoxla</button>
+    </form>
+    <div id="stResult" aria-live="polite"></div>
+  </div>
+</div>
+
+<div class="toasts" id="toasts" aria-live="polite"></div>
+<noscript><p class="nojs">Bu səhifə üçün JavaScript tələb olunur.</p></noscript>
+
+<script src="assets/js/room3d.js?v=1"></script>
+<script src="assets/js/app.js?v=1"></script>
+</body>
+</html>

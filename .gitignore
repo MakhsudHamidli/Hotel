@@ -1,0 +1,5 @@
+config.local.php
+ADMIN_CREDENTIALS.txt
+data/*.sqlite*
+.claude/
+*.log

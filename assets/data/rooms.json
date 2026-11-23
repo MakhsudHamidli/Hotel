@@ -1,0 +1,93 @@
+{
+  "hotel": {
+    "name": "Baku Marriott Hotel Boulevard",
+    "short": "Marriott Boulevard",
+    "floor": 7,
+    "currency": "AZN",
+    "currencySymbol": "₼",
+    "checkIn": "15:00",
+    "checkOut": "12:00",
+    "address": "Xaqani Rüstəmov küç. 4C, Xətai rayonu, Bakı AZ1010",
+    "phone": "+994 12 310 00 00"
+  },
+  "types": {
+    "guest-king": {
+      "name": "Qonaq otağı · King",
+      "size": 32, "capacity": 2, "bed": "1 King çarpayı", "view": "Şəhər mənzərəsi", "price": 260,
+      "summary": "Ağ Şəhərin işıqlarına baxan, işıqla dolu rahat otaq.",
+      "amenities": ["wifi", "coffee", "tv", "safe", "rain", "ac"],
+      "look": { "wall": "panel", "accent": "#7d5a3c", "bedding": "#eeeae2", "throw": "#2f4b5e", "rug": "#3d4a55", "view": "city-night", "beds": "king", "extras": ["desk"] }
+    },
+    "guest-twin": {
+      "name": "Qonaq otağı · Twin",
+      "size": 32, "capacity": 2, "bed": "2 tək çarpayı", "view": "Şəhər mənzərəsi", "price": 260,
+      "summary": "İş səfərləri və dostlar üçün iki ayrıca çarpayı.",
+      "amenities": ["wifi", "coffee", "tv", "safe", "rain", "ac"],
+      "look": { "wall": "panel", "accent": "#7d5a3c", "bedding": "#eeeae2", "throw": "#8a5a3b", "rug": "#4a4440", "view": "city-day", "beds": "twin", "extras": ["plant"] }
+    },
+    "guest-sea": {
+      "name": "Qonaq otağı · Dəniz mənzərəli",
+      "size": 34, "capacity": 2, "bed": "1 King çarpayı", "view": "Xəzər dənizi", "price": 300,
+      "summary": "Pəncərədən birbaşa Xəzərə və Bulvara açılan mənzərə.",
+      "amenities": ["wifi", "coffee", "tv", "safe", "rain", "ac", "sea"],
+      "look": { "wall": "stone", "accent": "#8b6a4a", "bedding": "#f1eee8", "throw": "#2a6f7a", "rug": "#2e4a52", "view": "sea-day", "beds": "king", "extras": ["desk", "plant"] }
+    },
+    "deluxe": {
+      "name": "Deluxe qonaq otağı",
+      "size": 40, "capacity": 3, "bed": "1 King çarpayı + divan", "view": "Xəzər dənizi", "price": 360,
+      "summary": "Geniş oturma guşəsi və gün batımı mənzərəsi ilə deluxe otaq.",
+      "amenities": ["wifi", "coffee", "tv", "safe", "rain", "ac", "sea", "sofa"],
+      "look": { "wall": "marble", "accent": "#6e4f37", "bedding": "#f4f1ea", "throw": "#b0753f", "rug": "#5a4636", "view": "sea-sunset", "beds": "king", "extras": ["sofa", "plant"] }
+    },
+    "executive": {
+      "name": "Executive otaq · M Club",
+      "size": 40, "capacity": 2, "bed": "1 King çarpayı", "view": "Dəniz və şəhər", "price": 420,
+      "summary": "4-cü mərtəbədəki M Club Lounge-a giriş, səhər yeməyi və axşam qəlyanaltıları.",
+      "amenities": ["wifi", "coffee", "tv", "safe", "rain", "ac", "club", "breakfast"],
+      "look": { "wall": "panel", "accent": "#3f3128", "bedding": "#ece8df", "throw": "#1f2c3a", "rug": "#2a2f36", "view": "sea-night", "beds": "king", "extras": ["desk", "sofa"] }
+    },
+    "family": {
+      "name": "Ailə otağı",
+      "size": 48, "capacity": 4, "bed": "1 King + 1 tək çarpayı", "view": "Şəhər mənzərəsi", "price": 400,
+      "summary": "Uşaqlı ailələr üçün geniş planlı, rahat otaq.",
+      "amenities": ["wifi", "coffee", "tv", "safe", "rain", "ac", "family", "sofa"],
+      "look": { "wall": "stone", "accent": "#8b6a4a", "bedding": "#f3efe6", "throw": "#5b7a54", "rug": "#6b5a45", "view": "city-day", "beds": "family", "extras": ["sofa", "plant"] }
+    },
+    "terrace": {
+      "name": "Terraslı Suite",
+      "size": 62, "capacity": 3, "bed": "1 King çarpayı", "view": "Xəzər · şəxsi terras", "price": 620,
+      "summary": "Dənizə baxan şəxsi terras və ayrıca qonaq zonası.",
+      "amenities": ["wifi", "coffee", "tv", "safe", "rain", "ac", "sea", "terrace", "club", "bath"],
+      "look": { "wall": "marble", "accent": "#5c4330", "bedding": "#f5f2ec", "throw": "#c08a4a", "rug": "#4b3a2c", "view": "sea-sunset", "beds": "king", "extras": ["terrace", "sofa", "plant"] }
+    },
+    "suite": {
+      "name": "1 yataq otaqlı Executive Suite",
+      "size": 75, "capacity": 3, "bed": "1 King çarpayı", "view": "Panoram dəniz", "price": 780,
+      "summary": "Ayrıca qonaq otağı, vanna və M Club imtiyazları ilə suite.",
+      "amenities": ["wifi", "coffee", "tv", "safe", "rain", "ac", "sea", "club", "bath", "breakfast", "sofa"],
+      "look": { "wall": "marble", "accent": "#3b2c22", "bedding": "#f4f0e8", "throw": "#7a2f2f", "rug": "#3a2a24", "view": "sea-night", "beds": "king", "extras": ["bath", "sofa", "desk", "plant"] }
+    }
+  },
+  "rooms": [
+    { "no": "701", "type": "guest-king", "side": "L" },
+    { "no": "702", "type": "guest-sea", "side": "R" },
+    { "no": "703", "type": "guest-twin", "side": "L" },
+    { "no": "704", "type": "guest-sea", "side": "R" },
+    { "no": "705", "type": "guest-king", "side": "L" },
+    { "no": "706", "type": "deluxe", "side": "R" },
+    { "no": "707", "type": "family", "side": "L" },
+    { "no": "708", "type": "deluxe", "side": "R" },
+    { "no": "709", "type": "guest-twin", "side": "L" },
+    { "no": "710", "type": "executive", "side": "R" },
+    { "no": "711", "type": "family", "side": "L" },
+    { "no": "712", "type": "executive", "side": "R" },
+    { "no": "713", "type": "guest-king", "side": "L" },
+    { "no": "714", "type": "deluxe", "side": "R" },
+    { "no": "715", "type": "executive", "side": "L" },
+    { "no": "716", "type": "terrace", "side": "R" },
+    { "no": "717", "type": "deluxe", "side": "L" },
+    { "no": "718", "type": "terrace", "side": "R" },
+    { "no": "719", "type": "suite", "side": "L" },
+    { "no": "720", "type": "suite", "side": "R" }
+  ]
+}

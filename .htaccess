@@ -1,0 +1,25 @@
+Options -Indexes
+DirectoryIndex index.html index.php
+
+# Block private files
+<FilesMatch "^(config\.local\.php|.*\.sqlite.*|.*\.md|\.ftp-deploy-sync-state\.json)$">
+  Require all denied
+</FilesMatch>
+RedirectMatch 404 /\.git
+RedirectMatch 404 ^/data/
+
+<IfModule mod_headers.c>
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set Permissions-Policy "camera=(), microphone=(), geolocation=()"
+  <FilesMatch "\.(css|js|json)$">
+    Header set Cache-Control "public, max-age=3600"
+  </FilesMatch>
+</IfModule>
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{HTTPS} off
+  RewriteCond %{HTTP_HOST} !^localhost [NC]
+  RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+</IfModule>
