@@ -380,3 +380,34 @@ legend{grid-column:1/-1;padding:10px 0 2px;font-size:12px;font-weight:700;letter
 .bbar.compact.open .bbar-fields{display:flex}
 .stage,.vig{transition:transform .5s var(--ease)}
 @media (min-width:900px){body.rcp-open .stage{transform:translateX(-240px)}}
+
+/* ---------- mobile fixes ---------- */
+.rm-info{background:#fff}
+.near{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(78px + env(safe-area-inset-bottom,0px));z-index:21;display:flex;gap:10px;pointer-events:none}
+.near button{pointer-events:auto;display:flex;align-items:center;gap:10px;min-height:48px;padding:6px 16px 6px 8px;border-radius:999px;border:1px solid rgba(201,164,106,.55);background:rgba(16,12,9,.82);color:#fff;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);font-weight:600;font-size:14px;text-align:left;animation:rise .25s var(--ease);touch-action:manipulation}
+.near button .n{display:grid;place-items:center;min-width:46px;height:34px;padding:0 6px;border-radius:999px;background:linear-gradient(180deg,#e9cf98,#b8935a);color:#1d140d;font:600 16px var(--head);letter-spacing:.06em}
+.near button small{display:block;font-size:12px;font-weight:600;color:var(--c)}
+.near button[data-st="free"]{--c:var(--free)}.near button[data-st="pending"]{--c:var(--pending)}.near button[data-st="booked"]{--c:var(--booked)}.near button[data-st="closed"]{--c:var(--closed)}
+.near button .t{max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:block}
+html.rcp-lock,html.rcp-lock body{overflow:hidden}
+@media (max-width:860px){
+  .rm{grid-template-rows:minmax(0,46dvh) minmax(0,1fr)}
+  .rm-view{aspect-ratio:auto;height:100%}
+  .drag-hint span,.drag-hint{font-size:12px}
+  .rm-ctrl{padding:10px 12px}
+  .round{width:40px;height:40px}
+}
+@media (max-width:700px){
+  .drag-hint{max-width:40%}
+  .near{width:calc(100vw - 24px);justify-content:center}
+  .near button{flex:1 1 0;min-width:0;max-width:200px}
+  .near button .t{max-width:90px}
+  .hud{padding-top:8px}
+  .legend{font-size:11px}
+  .rcp{width:100vw}
+  .rcp-done .code{font-size:28px}
+  .modal{padding:0}
+  .rm{height:100dvh;border-radius:0}
+  .card{border-radius:16px;margin:12px}
+  .bbar.open .bbar-fields{max-height:calc(100dvh - 160px);overflow:auto}
+}

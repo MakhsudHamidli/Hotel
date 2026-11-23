@@ -177,7 +177,7 @@
     cur += (target - cur) * (reduce ? 1 : 0.085);
     if (Math.abs(target - cur) < 0.1) cur = target;
     var w = window.innerWidth;
-    var scale = w < 700 ? Math.min(1, Math.max(0.62, w / 520)) : Math.min(1, Math.max(0.64, w / 780));
+    var scale = w < 700 ? Math.min(1, Math.max(0.7, w / 420)) : Math.min(1, Math.max(0.64, w / 780));
     world.style.transform = 'scale(' + scale + ') translateZ(' + cur.toFixed(2) + 'px)';
     for (var i = 0; i < items.length; i++) {
       var it = items[i], ahead = it.z - cur, o = 1;
@@ -188,6 +188,7 @@
     }
     $('#meter').textContent = '7-ci mərtəbə · ' + Math.round(cur / 100) + ' m';
     $('#hint').style.opacity = cur > 300 ? 0 : 1;
+    if (++nearTick % 12 === 0) updateNear();
     var bb = $('#bbar'), compact = cur > 350 && w > 820;
     if (compact !== bb.classList.contains('compact')) {
       bb.classList.toggle('compact', compact);
@@ -207,18 +208,19 @@
 
   /* ---------- door picking ---------- */
   var doors = [], hoverDoor = null, tip = $('#doorTip');
+  var coarse = window.matchMedia('(pointer: coarse)').matches;
   function pickAt(x, y) {
-    var best = null, bw = 0;
+    var best = null, bw = 0, pad = coarse ? 28 : 0;
     for (var i = 0; i < doors.length; i++) {
       var d = doors[i], z = +d.dataset.z;
       if (z - cur < -480 || z - cur > 4200) continue;
       var r = d.getBoundingClientRect();
-      if (r.width < 24 || r.width > window.innerWidth || x < r.left || x > r.right || y < r.top || y > r.bottom) continue;
+      if (r.width < 14 || r.width > window.innerWidth * 1.5 || x < r.left - pad || x > r.right + pad || y < r.top - pad || y > r.bottom + pad) continue;
       if (r.width > bw) { bw = r.width; best = d; }
     }
     return best;
   }
-  function overUI(e) { return e.target.closest && e.target.closest('.hdr,.bbar,.hud,.modal,.rcp,.toasts'); }
+  function overUI(e) { return e.target.closest && e.target.closest('.hdr,.bbar,.hud,.modal,.rcp,.toasts,.near'); }
   document.addEventListener('mousemove', function (e) {
     if (!fine || modalOpen() || overUI(e)) { if (hoverDoor) { hoverDoor.classList.remove('hot'); hoverDoor = null; tip.hidden = true; document.body.style.cursor = ''; } return; }
     var t = pickAt(e.clientX, e.clientY);
@@ -244,6 +246,37 @@
     var t = pickAt(e.clientX, e.clientY);
     if (t) openRoom(t.dataset.no);
   });
+
+  /* ---------- nearby rooms bar (big tap targets, esp. phones) ---------- */
+  var nearTick = 0, nearKey = '';
+  function updateNear() {
+    var box = $('#near');
+    if (!box || !ROOMS.length) return;
+    var pick = { L: null, R: null };
+    doors.forEach(function (d) {
+      var ahead = +d.dataset.z - cur;
+      if (ahead < 380 || ahead > 1350) return;
+      var side = d.closest('#wl') ? 'L' : 'R';
+      if (!pick[side] || +d.dataset.z < +pick[side].dataset.z) pick[side] = d;
+    });
+    var list = [pick.L, pick.R].filter(Boolean);
+    if (modalOpen() || rcp.classList.contains('on')) list = [];
+    var key = list.map(function (d) { return d.dataset.no + (STATUS[d.dataset.no] || ''); }).join(',');
+    if (key === nearKey) return;
+    nearKey = key;
+    box.innerHTML = list.map(function (d) {
+      var no = d.dataset.no, t = typeOf(no), st = STATUS[no] || 'free';
+      return '<button type="button" data-no="' + no + '" data-st="' + st + '" aria-label="Otaq ' + no + ' — ' + esc(t.name) + ', ' + STATUS_TXT[st] + '"><span class="n">' + no + '</span><span><span class="t">' + esc(t.name) + '</span><small>● ' + STATUS_TXT[st] + '</small></span></button>';
+    }).join('');
+  }
+  $('#near').addEventListener('click', function (e) {
+    var b = e.target.closest('[data-no]');
+    if (b) openRoom(b.dataset.no);
+  });
+  document.addEventListener('click', function (e) {
+    var bb = $('#bbar');
+    if (bb.classList.contains('open') && !e.target.closest('#bbar')) { bb.classList.remove('open'); $('#bbarChip').setAttribute('aria-expanded', 'false'); e.stopPropagation(); e.preventDefault(); }
+  }, true);
 
   /* ---------- modals ---------- */
   var lastFocus = null;
@@ -379,12 +412,13 @@
   var rcp = $('#reception'), form = $('#resForm'), rcpPinned = false;
   function openReception() {
     rcp.hidden = false;
-    requestAnimationFrame(function () { rcp.classList.add('on'); document.body.classList.add('rcp-open'); });
+    requestAnimationFrame(function () { rcp.classList.add('on'); document.body.classList.add('rcp-open'); if (window.innerWidth < 900) document.documentElement.classList.add('rcp-lock'); });
     updateSummary();
   }
   function closeReception(silent) {
     rcp.classList.remove('on');
     document.body.classList.remove('rcp-open');
+    document.documentElement.classList.remove('rcp-lock');
     rcpPinned = false;
     if (!silent) rcpDismissed = true;
   }
