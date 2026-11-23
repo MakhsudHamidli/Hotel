@@ -50,8 +50,20 @@
 
   /* ---------- corridor build ---------- */
   function doorZ(i, side) { return (side === 'L' ? L_START : R_START) + i * SPACING; }
+  // 960px tiles (multiple of the 120px wall-panel rhythm) from the entrance to past the reception wall
+  function tiles() {
+    var h = '', k, z;
+    for (k = 0; k < 10; k++) {
+      z = 1200 - 480 - k * 960;
+      h += '<div class="plane tf" style="transform:translate3d(0,calc(var(--H)/2),' + z + 'px) rotateX(90deg)"></div>';
+      h += '<div class="plane tc" style="transform:translate3d(0,calc(var(--H)/-2),' + z + 'px) rotateX(90deg)"></div>';
+      h += '<div class="plane tw" style="transform:translate3d(calc(var(--W)/-2 - 1px),0,' + z + 'px) rotateY(90deg)"></div>';
+      h += '<div class="plane tw" style="transform:translate3d(calc(var(--W)/2 + 1px),0,' + z + 'px) rotateY(-90deg)"></div>';
+    }
+    return h;
+  }
   function buildCorridor() {
-    var html = '<div class="plane floor"></div><div class="plane ceil"></div>' +
+    var html = tiles() +
       '<div class="plane wall l" id="wl"></div><div class="plane wall r" id="wr"></div>' +
       '<div class="plane endw" style="transform:translateZ(-' + END_Z + 'px)"><div class="wm">BAKU MARRIOTT</div><div class="ws">HOTEL BOULEVARD</div><div class="rcp-word">RESEPSİYON</div><div class="keys"></div></div>' +
       '<div class="plane desk" data-z="7540" data-x="0" data-y="147"><span class="dsk-l">RESEPSİYON</span></div>' +
