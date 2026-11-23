@@ -6,6 +6,7 @@
   var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var fine = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+  var coarse = window.matchMedia('(pointer: coarse)').matches || window.innerWidth < 820;
 
   var STATUS_TXT = { free: 'Boş', pending: 'Gözləmədə', booked: 'Dolu', closed: 'Satışda deyil' };
   var LAMP_TXT = { free: 'BOŞ', pending: 'GÖZLƏMƏDƏ', booked: 'DOLU', closed: 'BAĞLI' };
@@ -50,50 +51,60 @@
 
   /* ---------- corridor build ---------- */
   function doorZ(i, side) { return (side === 'L' ? L_START : R_START) + i * SPACING; }
-  // 960px tiles (multiple of the 120px wall-panel rhythm) from the entrance to past the reception wall
+  // Everything is built from small, separate 3D planes. Phone GPUs cannot raster huge 3D layers
+  // (a 9000px wall at DPR 2.6 is ~100 MB), so we never create one, and we cull planes far from the camera.
+  function cullAttrs(d0, d1) { return ' data-c0="' + Math.round(d0) + '" data-c1="' + Math.round(d1) + '"'; }
   function tiles() {
-    var h = '', k, z;
+    var h = '', k, z, dc;
     for (k = 0; k < 10; k++) {
-      z = 1200 - 480 - k * 960;
-      h += '<div class="plane tf" style="transform:translate3d(0,calc(var(--H)/2),' + z + 'px) rotateX(90deg)"></div>';
-      h += '<div class="plane tc" style="transform:translate3d(0,calc(var(--H)/-2),' + z + 'px) rotateX(90deg)"></div>';
-      h += '<div class="plane tw" style="transform:translate3d(calc(var(--W)/-2 - 1px),0,' + z + 'px) rotateY(90deg)"></div>';
-      h += '<div class="plane tw" style="transform:translate3d(calc(var(--W)/2 + 1px),0,' + z + 'px) rotateY(-90deg)"></div>';
+      z = 1200 - 480 - k * 960; dc = -z;
+      var c = cullAttrs(dc - 481, dc + 481);
+      h += '<div class="plane tf"' + c + ' style="transform:translate3d(0,calc(var(--H)/2),' + z + 'px) rotateX(90deg)"></div>';
+      h += '<div class="plane tc"' + c + ' style="transform:translate3d(0,calc(var(--H)/-2),' + z + 'px) rotateX(90deg)"></div>';
+      h += '<div class="plane tw"' + c + ' style="transform:translate3d(calc(var(--W)/-2 - 1px),0,' + z + 'px) rotateY(90deg)"></div>';
+      h += '<div class="plane tw"' + c + ' style="transform:translate3d(calc(var(--W)/2 + 1px),0,' + z + 'px) rotateY(-90deg)"></div>';
     }
     return h;
   }
+  // Place an element on a side wall. q/top/w/h are in wall coordinates (wall = 9000×420, entrance at q=1200 on the left wall).
+  function wallItem(side, cls, attrs, inner, q, top, w, h) {
+    var center = q + w / 2, D = side === 'L' ? center - 1200 : 7800 - center;
+    var y = top + h / 2 - 210;
+    var x = side === 'L' ? 'calc(var(--W)/-2)' : 'calc(var(--W)/2)';
+    return '<div class="plane ' + cls + '"' + attrs + cullAttrs(D - w / 2, D + w / 2) + ' style="width:' + w + 'px;height:' + h + 'px;left:' + (-w / 2) + 'px;top:' + (-h / 2) + 'px;transform:translate3d(' + x + ',' + y + 'px,' + (-D) + 'px) rotateY(' + (side === 'L' ? 90 : -90) + 'deg)">' + inner + '</div>';
+  }
   function buildCorridor() {
     var html = tiles() +
-      '<div class="plane wall l" id="wl"></div><div class="plane wall r" id="wr"></div>' +
-      '<div class="plane endw" style="transform:translateZ(-' + END_Z + 'px)"><div class="wm">BAKU MARRIOTT</div><div class="ws">HOTEL BOULEVARD</div><div class="rcp-word">RESEPSİYON</div><div class="keys"></div></div>' +
+      '<div class="plane endw"' + cullAttrs(7790, 7810) + ' style="transform:translateZ(-' + END_Z + 'px)"><div class="wm">BAKU MARRIOTT</div><div class="ws">HOTEL BOULEVARD</div><div class="rcp-word">RESEPSİYON</div><div class="keys"></div></div>' +
       '<div class="plane desk" data-z="7540" data-x="0" data-y="147"><span class="dsk-l">RESEPSİYON</span></div>' +
       '<div class="plane desk-top" data-z="7580" data-x="0" data-y="84" data-rx="90"></div>' +
       '<div class="plane bell" data-z="7560" data-x="120" data-y="68"></div>' +
       '<div class="plane plant" data-z="7700" data-x="-250" data-y="85"></div>' +
       '<div class="plane plant" data-z="7700" data-x="250" data-y="85"></div>';
-    world.insertAdjacentHTML('afterbegin', html);
 
-    var wl = '', wr = '', li = 0, ri = 0;
+    var li = 0, ri = 0;
     ROOMS.forEach(function (r) {
-      var t = CAT.types[r.type];
-      var i = r.side === 'L' ? li++ : ri++;
-      var D = doorZ(i, r.side);
-      // left wall: element x p ↔ depth p-1200 ; right wall: depth 7800-p
-      var p = r.side === 'L' ? D + 1200 - 85 : 7800 - D - 85;
-      var door = '<div class="door" data-no="' + r.no + '" data-z="' + D + '" data-st="free" style="left:' + p + 'px">' +
-        '<div class="lamp"><i></i><span>BOŞ</span></div><div class="dn">' + r.no + '</div><div class="rd"></div><div class="dh"></div></div>';
-      var plqP = r.side === 'L' ? p + 200 : p - 180;
-      var plq = '<div class="plq" style="left:' + plqP + 'px"><b>' + esc(t.name) + '</b><span>' + money(t.price) + ' / gecə</span></div>';
-      var scP = r.side === 'L' ? p + 372 : p - 230;
-      var artP = r.side === 'L' ? p + 404 : p - 390;
-      var deco = (i % 2 ? '<div class="art" style="left:' + artP + 'px"></div>' : '') + '<div class="sc" style="left:' + scP + 'px"></div>';
-      if (r.side === 'L') wl += door + plq + deco; else wr += door + plq + deco;
+      var t = CAT.types[r.type], S = r.side;
+      var i = S === 'L' ? li++ : ri++;
+      var D = doorZ(i, S);
+      var p = S === 'L' ? D + 1200 - 85 : 7800 - D - 85;   // door's left edge in wall coordinates
+      html += wallItem(S, 'door', ' data-no="' + r.no + '" data-z="' + D + '" data-side="' + S + '" data-st="free"',
+        '<div class="lamp"><i></i><span>BOŞ</span></div><div class="dn">' + r.no + '</div><div class="rd"></div><div class="dh"></div>', p, 66, 170, 354);
+      html += wallItem(S, 'plq', '', '<b>' + esc(t.name) + '</b><span>' + money(t.price) + ' / gecə</span>', S === 'L' ? p + 200 : p - 180, 140, 150, 90);
+      html += wallItem(S, 'sc', '', '', S === 'L' ? p + 372 : p - 230, 104, 12, 110);
+      if (i % 2) html += wallItem(S, 'art', '', '', S === 'L' ? p + 404 : p - 390, 128, 120, 150);
     });
-    // entrance sconces
-    wl += '<div class="sc" style="left:2400px"></div>';
-    wr += '<div class="sc" style="left:6700px"></div>';
-    $('#wl').innerHTML = wl;
-    $('#wr').innerHTML = wr;
+    html += wallItem('L', 'sc', '', '', 2400, 104, 12, 110) + wallItem('R', 'sc', '', '', 6700, 104, 12, 110);
+    world.insertAdjacentHTML('afterbegin', html);
+    culled = $$('[data-c0]', world).map(function (el) { return { el: el, d0: +el.dataset.c0, d1: +el.dataset.c1, v: true }; });
+  }
+  var culled = [];
+  function cull() {
+    var ahead = coarse ? 3000 : 5600;
+    for (var i = 0; i < culled.length; i++) {
+      var c = culled[i], vis = c.d1 - cur > -650 && c.d0 - cur < ahead;
+      if (vis !== c.v) { c.v = vis; c.el.style.display = vis ? '' : 'none'; }
+    }
   }
 
   var items = [];
@@ -201,6 +212,7 @@
     $('#meter').textContent = '7-ci mərtəbə · ' + Math.round(cur / 100) + ' m';
     $('#hint').style.opacity = cur > 300 ? 0 : 1;
     if (++nearTick % 12 === 0) updateNear();
+    if (nearTick % 6 === 0) cull();
     var bb = $('#bbar'), compact = cur > 350 && w > 820;
     if (compact !== bb.classList.contains('compact')) {
       bb.classList.toggle('compact', compact);
@@ -220,7 +232,6 @@
 
   /* ---------- door picking ---------- */
   var doors = [], hoverDoor = null, tip = $('#doorTip');
-  var coarse = window.matchMedia('(pointer: coarse)').matches;
   function pickAt(x, y) {
     var best = null, bw = 0, pad = coarse ? 28 : 0;
     for (var i = 0; i < doors.length; i++) {
@@ -268,7 +279,7 @@
     doors.forEach(function (d) {
       var ahead = +d.dataset.z - cur;
       if (ahead < 380 || ahead > 1350) return;
-      var side = d.closest('#wl') ? 'L' : 'R';
+      var side = d.dataset.side;
       if (!pick[side] || +d.dataset.z < +pick[side].dataset.z) pick[side] = d;
     });
     var list = [pick.L, pick.R].filter(Boolean);
@@ -296,13 +307,14 @@
   function showModal(m) {
     lastFocus = document.activeElement;
     m.hidden = false;
+    document.documentElement.classList.add('has-modal');
     document.documentElement.style.overflow = 'hidden';
     tip.hidden = true;
     setTimeout(function () { var f = $('.x', m) || $('button', m); f && f.focus(); }, 30);
   }
   function hideModal(m) {
     m.hidden = true;
-    if (!modalOpen()) document.documentElement.style.overflow = '';
+    if (!modalOpen()) { document.documentElement.style.overflow = ''; document.documentElement.classList.remove('has-modal'); }
     if (lastFocus && lastFocus.focus) lastFocus.focus();
   }
   $$('.modal').forEach(function (m) {
@@ -600,6 +612,7 @@
     buildCorridor();
     doors = $$('.door');
     layout();
+    cull();
     syncBar();
     fillRoomSelect();
     read(); cur = target;

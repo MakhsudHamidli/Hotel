@@ -411,3 +411,13 @@ html.rcp-lock,html.rcp-lock body{overflow:hidden}
   .card{border-radius:16px;margin:12px}
   .bbar.open .bbar-fields{max-height:calc(100dvh - 160px);overflow:auto}
 }
+
+/* ---------- GPU memory on phones ---------- */
+html.has-modal .stage{display:none}
+.plq{display:flex;flex-direction:column;justify-content:center}
+@media (pointer:coarse),(max-width:820px){
+  .modal-scrim,.btn-glass,.near button{-webkit-backdrop-filter:none;backdrop-filter:none}
+  .modal-scrim{background:rgba(10,8,6,.95)}
+  .near button,.btn-glass{background:rgba(16,12,9,.92)}
+  .world{will-change:auto}
+}
